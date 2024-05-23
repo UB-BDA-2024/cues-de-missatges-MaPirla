@@ -248,11 +248,17 @@ def get_temperature_values(db: Session, cassandra: CassandraClient, mongodb: Mon
     return  return_schema
 
 def get_sensors_quantity(db: Session, cassandra: CassandraClient):
-    query="""SELECT type, COUNT(*) FROM sensors
+    query="""SELECT type, COUNT(*) AS quantity FROM sensors
         GROUP BY type;
         """
     result = cassandra.execute(query)
-    return [dict(row) for row in result]
+    sensors = []
+    for row in result:
+        sensors.append({
+            "type": row.type,
+            "quantity": row.quantity
+        })
+    return {"sensors": sensors}
 
 def get_low_battery(db: Session, redis: RedisClient, mongodb: MongoDBClient):
     low_battery_sensors = []

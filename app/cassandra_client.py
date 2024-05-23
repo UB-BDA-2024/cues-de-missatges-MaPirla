@@ -37,7 +37,7 @@ class CassandraClient:
                 sensor_id INT,
                 name TEXT,
                 type TEXT,
-                PRIMARY KEY(sensor_id, type)
+                PRIMARY KEY (type, sensor_id)
             );
         """
         self.session.execute(create_table_query)
